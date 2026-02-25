@@ -2,6 +2,7 @@ package project20280.list;
 
 import project20280.interfaces.List;
 
+import java.util.Comparator;
 import java.util.Iterator;
 
 public class SinglyLinkedList<E> implements List<E> {
@@ -161,6 +162,78 @@ public class SinglyLinkedList<E> implements List<E> {
         previous.next = null;
         size--;
         return current.getElement();
+    }
+
+    public Node sortedMerge(Node l1, Node l2) {
+        Comparator c = Comparator.naturalOrder();
+        SinglyLinkedList<E> newList = new SinglyLinkedList<E>();
+        Node<E> curr;
+        while (l1 != null && l2 != null) {
+            if (c.compare(l1.getElement(), l2.getElement()) <= 0) {
+                curr = l1;
+                l1 = l1.getNext();
+                newList.addLast(curr.getElement());
+            }
+            else {
+                curr = l2;
+                l2 = l2.getNext();
+                newList.addLast(curr.getElement());
+            }
+        }
+        if (l1 != null) {
+            while (l1 != null) {
+                curr = l1;
+                l1 = l1.getNext();
+                newList.addLast(curr.getElement());
+            }
+        }
+        if (l2 != null) {
+            while (l2 != null) {
+                curr = l2;
+                l2 = l2.getNext();
+                newList.addLast(curr.getElement());
+            }
+        }
+        return newList.head;
+    }
+
+    public SinglyLinkedList<E> copy() {
+        SinglyLinkedList<E> twin = new SinglyLinkedList<E>();
+        Node<E> tmp = head;
+        while (tmp != null) {
+            twin.addLast(tmp.getElement());
+            tmp = tmp.next;
+        }
+        return twin;
+    }
+
+    public SinglyLinkedList<E> recursiveCopy() {
+        SinglyLinkedList<E> copy = new SinglyLinkedList<>();
+        copy.head = recursiveCopyHelper(this.head);
+        copy.size = this.size;
+        return copy;
+    }
+
+    private Node<E> recursiveCopyHelper(Node<E> node) {
+        if (node == null)
+            return null;
+
+        Node<E> newNode = new Node<>(node.getElement(), null);
+        newNode.next = recursiveCopyHelper(node.getNext());
+        return newNode;
+    }
+
+    public void reverse() {
+        Node<E> prev = null;
+        Node<E> curr = head;
+        Node<E> next;
+        while(curr != null) {
+            next = curr.getNext();
+            curr.setNext(prev);
+            prev = curr;
+            curr = next;
+        }
+        head = prev;
     }
 
     //@Override

@@ -7,7 +7,7 @@ import java.util.Iterator;
 public class CircularlyLinkedList<E> implements List<E> {
 
     private class Node<T> {
-        private final T data;
+        private T data;
         private Node<T> next;
 
         public Node(T e, Node<T> n) {
@@ -28,8 +28,8 @@ public class CircularlyLinkedList<E> implements List<E> {
         }
     }
 
-    private final Node<E> tail = null;
-    private final int size = 0;
+    private Node<E> tail = null;
+    private int size = 0;
 
     public CircularlyLinkedList() {
 
@@ -42,8 +42,12 @@ public class CircularlyLinkedList<E> implements List<E> {
 
     @Override
     public E get(int i) {
-        // TODO
-        return null;
+        Node<E> curr = tail.next;
+        while (i > 0) {
+            curr = curr.next;
+            i--;
+        }
+        return curr.data;
     }
 
     /**
@@ -55,17 +59,32 @@ public class CircularlyLinkedList<E> implements List<E> {
      */
     @Override
     public void add(int i, E e) {
-        // TODO
+        Node<E> curr = tail;
+        while (i > 0) {
+            curr = curr.next;
+            i--;
+        }
+        Node<E> newNode = new Node<E>(e, curr.next);
+        curr.setNext(newNode);
+        size++;
     }
 
     @Override
     public E remove(int i) {
-        // TODO
-        return null;
+        Node<E> curr = tail.next;
+        while (i > 0) {
+            curr = curr.next;
+            i--;
+        }
+        E element = curr.data;
+        curr.setNext(curr.next.next);
+        size--;
+        return element;
     }
 
     public void rotate() {
-        // TODO
+        if (tail != null)
+            tail = tail.next;
     }
 
     private class CircularlyLinkedListIterator<E> implements Iterator<E> {
@@ -97,24 +116,51 @@ public class CircularlyLinkedList<E> implements List<E> {
 
     @Override
     public E removeFirst() {
-        // TODO
-        return null;
+        if (tail == null) return null;
+        Node<E> head = tail.next;
+        E element = head.data;
+        tail.setNext(head.next);
+        size--;
+        return element;
     }
 
     @Override
     public E removeLast() {
-        // TODO
-        return null;
+        if (tail == null) return null;
+        Node<E> curr = tail;
+        while (curr.next != tail) {
+            curr = curr.next;
+        }
+        E element = curr.next.data;
+        curr.next = tail.next;
+        tail = curr;
+        size--;
+        return element;
     }
 
     @Override
     public void addFirst(E e) {
-        // TODO
+        if (tail == null) {
+            Node<E> newNode = new Node<>(e, null);
+            newNode.next = newNode;
+            tail = newNode;
+            size++;
+        } else {
+            tail.setNext(new Node<E>(e, tail.next));
+            size++;
+        }
     }
 
     @Override
     public void addLast(E e) {
-        // TODO
+        if (tail == null) {
+            addFirst(e);
+        }
+        else {
+            tail.setNext(new Node<E>(e, tail.next));
+            tail = tail.next;
+            size++;
+        }
     }
 
 

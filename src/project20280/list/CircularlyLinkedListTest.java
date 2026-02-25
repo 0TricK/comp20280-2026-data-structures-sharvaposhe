@@ -53,7 +53,6 @@ class CircularlyLinkedListTest {
         ll.addLast(1);
         ll.addLast(2);
         ll.addLast(3);
-
         assertEquals(2, ll.remove(1), "the removed value should be 1 ");
         assertEquals(2, ll.size(), "the size should be 2");
     }
